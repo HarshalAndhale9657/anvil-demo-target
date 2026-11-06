@@ -5,12 +5,15 @@
 > discover → exploit → verify → patch security pipeline — has a safe, known-vulnerable
 > target to demonstrate against.
 
-**Try it:** open the [live demo](https://github.com/HarshalAndhale9657/ANVIL#live-demo),
-connect GitHub, and click **Try the demo target**. ANVIL clones this repo, finds the
-planted bugs, launches the app, exploits it, verifies the exploit deterministically,
-writes a fix, re-runs the exploit against the patched app, and opens a pull request.
-If you don't have write access here (you won't), it forks the repo into your account
-and opens the PR **in your fork** — nothing is sent to this repository.
+**Try it:** open the live demo at **[anvil-aegis.vercel.app](https://anvil-aegis.vercel.app)**,
+connect GitHub, click the demo target and press **Start Scan**. ANVIL clones this repo, finds
+the planted bugs, launches the app, exploits it, verifies the exploit deterministically,
+writes a fix, re-runs the exploit against the patched app, and opens a pull request
+(about 40 seconds). If you don't have write access here (you won't), it forks the repo into
+your account and opens the PR **in your fork**; nothing is sent to this repository.
+
+**Example output:** [#3](https://github.com/HarshalAndhale9657/anvil-demo-target/pull/3), a
+fix PR opened by ANVIL with the proof of exploitation and the live re-exploit validation.
 
 ## Seeded vulnerabilities
 
