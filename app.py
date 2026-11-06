@@ -15,7 +15,7 @@ autonomous scanner can discover, exploit, verify, and patch them:
 """
 import base64
 import os
-import pickle
+import json
 
 from flask import Flask, Response, jsonify, request
 
@@ -35,8 +35,11 @@ def preferences():
     # VULN 1: insecure deserialization of an attacker-controlled cookie.
     raw = request.cookies.get("session_prefs")
     if raw:
-        prefs = pickle.loads(base64.b64decode(raw))  # noqa: S301 (intentional)
-        theme = prefs.get("theme", "default") if isinstance(prefs, dict) else "default"
+        try:
+            prefs = json.loads(base64.b64decode(raw).decode('utf-8'))
+            theme = prefs.get("theme", "default") if isinstance(prefs, dict) else "default"
+        except (json.JSONDecodeError, ValueError):
+            return jsonify({"error": "Invalid preferences format"}), 400
         return jsonify({"active_theme": theme})
     return jsonify({"active_theme": "default"})
 
@@ -45,6 +48,8 @@ def preferences():
 def get_file(filename):
     # VULN 2: path traversal — filename is joined without sanitization.
     full = os.path.join(FILES_DIR, filename)
+    if not os.path.commonpath([FILES_DIR, os.path.realpath(full)]).startswith(FILES_DIR):
+        return jsonify({"error": "Invalid file path"}), 403
     with open(full, "r", encoding="utf-8", errors="replace") as fh:
         return Response(fh.read(), mimetype="text/plain")
 
